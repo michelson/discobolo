@@ -4,10 +4,11 @@ module Discobolo
 
     attr_accessor :queue
 
-    def initialize(args)
-      args = Hash[*args] if args.is_a?(Array)
+    def initialize(*args)
+      args = Hash[*args.flatten] if args.is_a?(Array)
       puts "Initialize actor with: #{args}"
       @queue = args[:queue]
+      async.fetch if args[:fetch]
     end
 
     def push(message, args={})

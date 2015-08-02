@@ -8,10 +8,10 @@ module Discobolo
     def register_queues
 
       Discobolo::Config.queues.each do |queue|
-        self.supervise(Discobolo::Actor, as: queue , args: {queue: queue} )   
+        self.supervise(Discobolo::Actor, as: queue , args: {queue: queue, fetch: true} )   
       end
 
-      puts "#{self.actors.size } registered actors"
+      puts "#{self.actors.size} registered actors"
 
       self
     end
