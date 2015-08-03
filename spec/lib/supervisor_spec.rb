@@ -12,8 +12,8 @@ describe Discobolo::Supervisor do
 
   it "register queues will instantiate actors" do 
     supervisor = Discobolo::Supervisor.new
-    supervisor.register_queues
+    supervisor.async.register_queues
     expect(supervisor.actors.size).to be == 1
-    expect(supervisor.actors.map(&:queue)).to include("default")
+    expect(supervisor.actors.map(&:queues)).to include("default")
   end
 end

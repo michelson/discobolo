@@ -8,16 +8,23 @@ describe Discobolo::Actor do
       config.fetch_options = {count: 10, timeout: 2000}
     end
 
+    class MyWorker < Discobolo::Worker
+      set_queue "default"
+    end
+
 	end
 
   it "register queues will" do 
-    actor = Discobolo::Actor.new(queue: "default")
-    expect_any_instance_of(Disque).to receive(:push).at_most(1).times
-    actor.push("hello")
+    actor = Discobolo::Actor.new(queues: ["default"])
+    expect(actor.queues).to include("default")
   end
 
-  it "will transform string to class" do 
-    actor = Discobolo::Actor.new(queue: "default")
-    expect(actor.send(:to_class, "String")).to be == String    
+  it "fetch will perform" do 
+    actor = Discobolo::Actor.new(queues: ["default"])
+    expect(actor.queues).to include("default")
+    expect_any_instance_of(MyWorker).to receive(:async).at_most(1).times
+    actor.async.fetch()
+    MyWorker.enqueue("hello")
   end
+
 end
