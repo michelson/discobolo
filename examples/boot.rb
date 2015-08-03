@@ -52,4 +52,6 @@ end
 
 # TERMINAL 2 execute `bundle exec rake console`
 # rake console
-# $>  MyWorker.enqueue("elo!")
+# $>  DefaultWorker.enqueue("Hello")
+# $>  ImportantWorker.enqueue([1,2,3,4])
+# $>  BogusWorker.enqueue({b:323 , c:"dslihjoikmkkkmkmmjj"})

@@ -29,6 +29,10 @@ module Discobolo
       @actor_concurrency || 5
     end
 
+    def fetch_options
+      @fetch_options || {count: 10, timeout: 2000}
+    end
+
   end
 
 end

@@ -13,6 +13,8 @@ Discobolo::Config.setup do |config|
   config.client = ["127.0.0.1:7711"]
   config.queues = ["default", "important", "bogus"]
   config.fetch_options = {count: 10, timeout: 2000}
+  config.actor_concurrency = 5
+  config.logger = $stdout # or filepath.log
 end
 
 # Run Application:
