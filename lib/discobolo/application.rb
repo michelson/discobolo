@@ -4,7 +4,8 @@ module Discobolo
     def self.run
       @supervisor = Discobolo::Supervisor.new
       @supervisor.register_queues
-      @supervisor.actors.each{|o| o.async.fetch }
+      #@supervisor.actors.each{|o| o.async.fetch }
+      @supervisor.class.run
       self
     end
 
