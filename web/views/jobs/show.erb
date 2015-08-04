@@ -1,0 +1,33 @@
+<div class="page-header">
+  <h1><%= @job['id'] %></h1>
+</div>
+
+<p class="lead">From queue <%= @job['queue'] %></p> 
+
+
+<div class="pull-right">
+  <a href='<%= url_for("jobs/#{@job['id']}/dequeue") %>' class="btn btn-danger">
+    Dequeue
+  </a>
+
+  <a href='<%= url_for("jobs/#{@job['id']}/enqueue") %>' class="btn btn-info">
+    Enqueue
+  </a>
+
+</div>
+<div class="media">
+  
+
+  <% @job.each do |k , v| %>
+    <% next if k == "id" or k == "queue" %>
+    <dl>
+      <dt><%= k %></dt>
+      <dd><%= v %></dd>
+    </dl>
+  <% end %>
+</div>
+
+
+<div class="col-sm-4">
+  
+</div>

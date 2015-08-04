@@ -5,6 +5,7 @@ module Discobolo
 
     class << self
       attr_accessor :queue
+      attr_accessor :enqueue_options
     end
 
     def perform_async(*args)
@@ -15,13 +16,17 @@ module Discobolo
 
     def self.enqueue(message, options={})
       timeout = options.delete(:timeout) || 100
-      opts = {ttl: 1, async: true}.merge(options)
+      opts = self.enqueue_options.merge(options)
       #Discobolo::Config.logger.info "Enqueue from #{self.name} to queue #{@queue}"
       Discobolo::Config.client.push(@queue, format_msg(message), timeout, opts)
     end
 
     def self.set_queue(queue)
       self.queue = queue
+    end
+
+    def self.enqueue_options
+      @enqueue_options ||= {ttl: 50000, async: true}
     end
 
 private
