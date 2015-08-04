@@ -1,0 +1,64 @@
+<div class="page-header">
+  <h1><%= @queue.upcase %> QUEUE</h1>
+</div>
+
+
+
+<% if @jobs.any? %>
+  <div class="panel panel-default">
+    <!-- Default panel contents -->
+    <div class="panel-heading">Queues</div>
+    <div class="panel-body">
+      <p>...</p>
+    </div>
+
+    <!-- Table -->
+      <table class="table">
+        <thead>
+          <tr>
+            <% keys = @jobs.first.keys %>
+            <% keys.each do |k| %>
+              <th><%= k %></th>
+            <% end %>
+          </tr>
+        </thead>
+        <tbody>
+          <% @jobs.each do |job| %>
+            <tr>
+              <% keys.each do |k| %>
+                <% case k 
+                when "next-requeue-within", 'next-awake-within' %>
+                <th><%=  relative_time(job[k].to_i) %></th> 
+                <% when 'id' %>
+                <th>
+                  <%= link_to job['id'][2..10], "jobs/#{job['id']}" %>
+                </th>
+                <% when "state" %>
+                  <th><%= job[k] %></th>
+                <% else %>
+                  <th><%= job[k] %></th>
+                <% end %>
+              <% end %>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+  </div>
+<% end %>
+
+<% if @jobs.size > 0 %>
+ 
+  <a href='<%="?page=#{@page + 1}"%>'>
+      next
+  <a>
+  
+<% else %>
+
+<div class="alert alert-info">No jobs found</div>
+
+<% if params[:page].to_i > 0  %>
+  <a href='<%="?page=#{@page - 1}"%>'>
+    prev
+  <a>
+<% end %>
+<% end %>

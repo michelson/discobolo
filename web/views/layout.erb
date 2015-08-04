@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Discobolo panel</title>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
+
+    <link rel="stylesheet" type="text/css" href="/disque/css/sticky_footer.css">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+  </head>
+  <body>
+
+   <!-- Fixed navbar -->
+    <%= erb(:'partials/main_nav', layout: false) %>
+    
+
+    <!-- Begin page content -->
+    <div class="container">
+
+      <div class="col-sm-12">
+        <% Discobolo::Config.queues.each do |queue| %>
+          <div class="col-sm-1">
+            <div class="media-left hidden">
+              <a href="#">
+                <img class="media-object" data-src="holder.js/64x64" alt="64x64" src="" data-holder-rendered="true" style="width: 64px; height: 64px;">
+              </a>
+            </div>
+            <div class="media-body">
+              <h4 class="media-heading">
+                <%= link_to queue, "queues/#{queue}" %>
+                <%= client.queue_lenght(queue) %>
+              </h4>
+                 <% client.queue_lenght(queue) %>
+            </div>
+          </div>
+        <% end %>
+        <hr/>
+      </div>
+
+      <div class="col-sm-12">
+        <%= yield %>  
+      </div>
+  
+    </div>
+
+    <footer class="footer">
+      <div class="container">
+        <p class="text-muted">
+          Discobolo <%= Time.now.year %>
+          Nodes: <%= Discobolo::Config.client.instance_variable_get("@hosts").join(", ") %>
+        </p>
+      </div>
+    </footer>
+
+    
+  </body>
+</html>
