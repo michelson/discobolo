@@ -82,8 +82,10 @@ module Discobolo
 
     get "/queues/:queue" do
       @queue = params[:queue]
-      @page = params[:page].to_i || 0
-      @jobs = client.jscan(@queue, @page.to_i, 30).map{|o| o[:results]}
+      @page  = params[:page].to_i || 0
+      opts   = { page: @page.to_i, count: 30}
+      opts.merge!({state: params[:state]}) if params[:state]
+      @jobs = client.jscan(@queue, opts).map{|o| o[:results]}
       erb :'queues/show' 
     end
 

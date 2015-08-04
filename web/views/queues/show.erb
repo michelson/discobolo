@@ -1,6 +1,21 @@
 <div class="page-header">
+
+  <div class="pull-right">
+    <label>Filter state</label>
+    <select class="form-control" name="state">
+      <option value="">All</option>
+      <% ['wait-repl', 'active', 'queued', 'acknowledged'].each do |state| %>
+        <option value="<%= state %>"><%= state %></option>
+      <% end %>
+    </select>
+      
+  </div>
+
   <h1><%= @queue.upcase %> QUEUE</h1>
+
 </div>
+
+
 
 
 
