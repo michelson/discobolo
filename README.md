@@ -2,7 +2,7 @@
 
 Ruby worker system for [disque](https://github.com/antirez/disque)
 
-##usage:
+##Usage:
 
 ### Setup application:
 
@@ -34,6 +34,32 @@ class MyWorker < Discobolo::Worker
   end
 end
 ```
+
+### Enqueue
+
+```ruby
+DefaultWorker.enqueue({foo:bar})
+```
+
+## Web interface:
+
+```ruby
+#config.ru
+
+require 'discobolo/web'
+
+require "./your_disque_app"
+
+map '/disque' do
+  run Discobolo::Web
+end
+
+```
+### Run rack appplication:
+
+`bundle exec rackup`
+
+visit http://localhost:4567
 
 ## Contributing
 
