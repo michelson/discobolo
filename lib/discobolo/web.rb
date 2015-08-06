@@ -1,6 +1,7 @@
 require 'erb'
 require 'yaml'
 require 'sinatra/base'
+require 'json'
 
 require 'discobolo'
 #require 'discobolo/api'
@@ -68,11 +69,23 @@ module Discobolo
     end
 
     get "/" do 
+     
+      @ts = $disque_stats.get_points
       erb :index, layout: :layout
     end
 
     get "/info" do 
       erb :info, layout: :layout
+    end
+
+    get "/stats/processed.json" do 
+      content_type :json
+      $disque_stats.get_points.to_json
+    end
+
+    get "/stats/processed/weeks.json" do 
+      content_type :json
+      $disque_stats.get_history.to_json
     end
 
     get "/queues" do
