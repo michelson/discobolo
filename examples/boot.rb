@@ -9,6 +9,7 @@ class BogusWorker < Discobolo::Worker
   def perform(*args)
     puts "Performing from BogusWorker"
     puts "With #{job_id} #{args} "
+    raise "ERROR!"
   end
 end
 
@@ -35,6 +36,7 @@ end
 
 Discobolo::Config.setup do |config|
   config.client = ["127.0.0.1:7711"]
+  config.stats = :influxdb
   config.queues = ["default", "important", "bogus"]
   config.fetch_options = {count: 10, timeout: 2000}
 end

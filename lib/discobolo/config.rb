@@ -4,7 +4,11 @@ module Discobolo
   class Config
 
     class << self
-      attr_accessor :client, :queues, :fetch_options, :auth, :actor_concurrency
+      attr_accessor :client, 
+                    :queues, 
+                    :fetch_options, 
+                    :auth, 
+                    :actor_concurrency
     end
 
     def self.setup
@@ -16,6 +20,11 @@ module Discobolo
       @client = Client.new(nodes)
     end
 
+    def self.stats=(type, opts={})
+      $disque_stats ||= Discobolo::Stats.register(type.to_sym, opts)
+      $disque_stats.setup
+    end
+
     def self.logger=(arg=nil)
       l = arg.nil? ? arg : $stdout
       @logger = Discobolo::Logger.new(l)
@@ -25,11 +34,11 @@ module Discobolo
       @logger || Discobolo::Logger.new($stdout)
     end
 
-    def actor_concurrency
+    def self.actor_concurrency
       @actor_concurrency || 5
     end
 
-    def fetch_options
+    def self.fetch_options
       @fetch_options || {count: 10, timeout: 2000}
     end
 
