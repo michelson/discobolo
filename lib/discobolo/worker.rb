@@ -9,9 +9,15 @@ module Discobolo
     end
 
     def perform_async(*args)
-      perform(*args)
+      begin
+        perform(*args)
+      rescue => e
+        $disque_stats.add(self.class.queue, {tag: self.job_id , name: "failed"})
+        raise e
+      end
       Discobolo::Config.client.call('ACKJOB', self.job_id)
       Discobolo::Config.logger.info "Finished job #{self.job_id}"
+      $disque_stats.add(self.class.queue, {tag: self.job_id , name: "processed"})
     end
 
     def self.enqueue(message, options={})
