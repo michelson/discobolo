@@ -43,7 +43,7 @@
               <% keys.each do |k| %>
                 <% case k 
                 when "next-requeue-within", 'next-awake-within' %>
-                <th><%=  relative_time(job[k].to_i) %></th> 
+                <th><%=  job[k].to_i %></th> 
                 <% when 'id' %>
                 <th>
                   <%= link_to job['id'][2..10], "jobs/#{job['id']}" %>

@@ -27,25 +27,6 @@ module Discobolo
       "<a href='#{url_for(path)}'>#{name}</a>"
     end
 
-    def relative_time(start_time)
-      #start_time = start_time.is_a?(Integer) ? Time.at(start_time) : start_time
-      diff_seconds = start_time
-      case start_time
-      when 0 .. 59
-        out = "in #{diff_seconds.round(2)} seconds"
-      when 60 .. (3600-1)
-        out = "in #{(diff_seconds/60).round(2)} minutes"
-      when 3600 .. (3600*24-1)
-        out = "in #{(diff_seconds/3600).round(2)} hours"
-      when (3600*24) .. (3600*24*30) 
-        out = "in #{diff_seconds/(3600*24).round(2)} days"
-      else
-        out = start_time.strftime("%m/%d/%Y")
-      end
-      out
-    end
-
-
   end
 end
 
