@@ -31,6 +31,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency "sinatra"
   spec.add_dependency "celluloid"
   spec.add_dependency "json"
+  spec.add_dependency "influxdb"
 
   spec.add_development_dependency "bundler", "~> 1.10"
   spec.add_development_dependency "rake", "~> 10.0"
