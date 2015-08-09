@@ -1,6 +1,7 @@
 require 'erb'
 require 'yaml'
 require 'sinatra/base'
+require 'json'
 
 require 'discobolo'
 #require 'discobolo/api'
@@ -26,25 +27,6 @@ module Discobolo
       "<a href='#{url_for(path)}'>#{name}</a>"
     end
 
-    def relative_time(start_time)
-      #start_time = start_time.is_a?(Integer) ? Time.at(start_time) : start_time
-      diff_seconds = start_time
-      case start_time
-      when 0 .. 59
-        out = "in #{diff_seconds.round(2)} seconds"
-      when 60 .. (3600-1)
-        out = "in #{(diff_seconds/60).round(2)} minutes"
-      when 3600 .. (3600*24-1)
-        out = "in #{(diff_seconds/3600).round(2)} hours"
-      when (3600*24) .. (3600*24*30) 
-        out = "in #{diff_seconds/(3600*24).round(2)} days"
-      else
-        out = start_time.strftime("%m/%d/%Y")
-      end
-      out
-    end
-
-
   end
 end
 
@@ -68,11 +50,23 @@ module Discobolo
     end
 
     get "/" do 
+     
+      @ts = $disque_stats.get_points
       erb :index, layout: :layout
     end
 
     get "/info" do 
       erb :info, layout: :layout
+    end
+
+    get "/stats/processed.json" do 
+      content_type :json
+      $disque_stats.get_points.to_json
+    end
+
+    get "/stats/processed/weeks.json" do 
+      content_type :json
+      $disque_stats.get_history.to_json
     end
 
     get "/queues" do
@@ -82,13 +76,11 @@ module Discobolo
 
     get "/queues/:queue" do
       @queue = params[:queue]
-      @page = params[:page].to_i || 0
-      @jobs = client.jscan(@queue, @page.to_i, 30).map{|o| o[:results]}
+      @page  = params[:page].to_i || 0
+      opts   = { page: @page.to_i, count: 30}
+      opts.merge!({state: params[:state]}) if params[:state]
+      @jobs = client.jscan(@queue, opts).map{|o| o[:results]}
       erb :'queues/show' 
-    end
-
-    get "/workers" do 
-      erb :'workers/index'
     end
 
     get "/jobs/:id" do 
@@ -104,6 +96,13 @@ module Discobolo
     get "/jobs/:id/dequeue" do 
       @job = client.enqueue(params[:id])
       redirect url_for("/jobs/#{params[:id]}")
+    end
+
+    get "/workers" do 
+      s = Discobolo::SocketClient.new("/tmp/discobolo_stats")
+      @workers = s.echo("stats")
+      s.finalize
+      erb :"workers/index"
     end
 
     get "/info" do 

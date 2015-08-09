@@ -13,6 +13,7 @@ Discobolo::Config.setup do |config|
   config.client = ["127.0.0.1:7711"]
   config.queues = ["default", "important", "bogus"]
   config.fetch_options = {count: 10, timeout: 2000}
+  config.stats = :influxdb
   config.actor_concurrency = 5
   config.logger = $stdout # or filepath.log
 end
@@ -60,6 +61,24 @@ end
 `bundle exec rackup`
 
 visit http://localhost:4567
+
+
+## Stats
+
+The default stats system uses InfluxDB, so you have to install it in order to Discobolo display metrics in web panel.
+
+to create another stats library you have to inherit from `Discobolo::Stats`
+the class have to respond to some methods in order to work:
+
+```
+initialize
+setup
+add
+get_points
+get_history
+```
+
+See discobolo/stats/influxdb.rb for more information.
 
 ## Contributing
 

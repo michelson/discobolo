@@ -1,7 +1,5 @@
 require "spec_helper"
 
-
-
 describe Discobolo::Actor do 
 	before do 
 

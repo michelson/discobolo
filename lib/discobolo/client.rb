@@ -26,9 +26,11 @@ module Discobolo
       #call("QSTAT", queue)
     end
 
-    def jscan(queue, page=0, count=30)
+    def jscan(queue, options={page: 0, count: 30})
       jobs = []
-      Discobolo::Config.client.call("JSCAN", page, "COUNT", count, "QUEUE" , queue, "REPLY", "all").each do |job|
+      state = options[:state] ? ["STATE", options[:state]] : []
+      opts = ["JSCAN", options[:page], "COUNT", options[:count], "QUEUE" , queue, "REPLY", "all"] + state
+      Discobolo::Config.client.call(*opts).each do |job|
         next if job.is_a? String
         next if job.empty?
         job.each do |j|

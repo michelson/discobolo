@@ -4,6 +4,7 @@ source 'https://rubygems.org'
 gemspec
 
 gem 'sinatra'
+gem 'influxdb'
 
 
 group :test do 

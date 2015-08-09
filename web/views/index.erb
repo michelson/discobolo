@@ -1,14 +1,175 @@
 <div class="page-header">
-  <h1>Discobolo panel</h1>
+  <h1>REALTIME</h1>
 </div>
 
 <p class="lead">Queues</p> 
 
 
 
-<div class="media">
-     
+<div id="chart_container">
+	<div id="chart"></div>
+	<div id="legend_container">
+		<div id="smoother" title="Smoothing"></div>
+		<div id="legend"></div>
+	</div>
+	<div id="slider"></div>
 </div>
+
+<hr/>
+<h3>weeks</h3>
+
+<div id="chart_container2">
+	<div id="chart2"></div>
+	<div id="legend_container2">
+		<div id="smoother2" title="Smoothing"></div>
+		<div id="legend2"></div>
+	</div>
+	<div id="slider2"></div>
+</div>
+
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/rickshaw/1.5.1/rickshaw.min.css" media="screen" rel="stylesheet" type="text/css">
+    
+
+
+<script>
+
+</script>
+
+    <script type="text/javascript">
+        $(function() {
+
+            drawGraph( 'test_chart');
+
+            $.getJSON("/disque/stats/processed/weeks.json", function(data){
+            	drawGraph2( 'chart2', transformData(data) );	
+            })
+            
+
+            function transformData(influxData) {
+                var palette = new Rickshaw.Color.Palette();
+                return influxData.map(function(s) {
+                    return {
+                        name: s.name,
+                        data: s.values.map(function(v) {
+                            return { x: Date.parse(v.time)/1000, y: v.count == null ? 0 : v.count };
+
+                        }),
+                        color: s.name == "processed" ? 'green' : "red"
+                    };
+                });
+            }
+
+            var timeInterval = 1000;
+
+            function drawGraph($element) {
+                //$element.find('.y_axis').css('background-color: red;')
+
+								// instantiate our graph!
+								var graph = new Rickshaw.Graph( {
+									element: document.getElementById("chart"),
+									width: 960,
+									height: 200,
+									renderer: "line",
+									interpolation: 'linear',
+									
+									series: new Rickshaw.Series.FixedDuration(
+										[{ name: 'processed', color: 'green'}, { name: 'failed', color: 'red'}], 
+										undefined, {
+								        timeInterval: 1000,
+								        maxDataPoints: 100,
+								        timeBase: new Date().getTime() / 1000
+								    })
+
+								} );
+
+								graph.render();
+
+								var hoverDetail = new Rickshaw.Graph.HoverDetail( {
+									graph: graph
+								} );
+
+								var legend = new Rickshaw.Graph.Legend( {
+									graph: graph,
+									element: document.getElementById('legend')
+
+								} );
+
+								var shelving = new Rickshaw.Graph.Behavior.Series.Toggle( {
+									graph: graph,
+									legend: legend
+								} );
+
+								var axes = new Rickshaw.Graph.Axis.Time( {
+									graph: graph
+								} );
+								axes.render();
+
+
+								function addData(chart){
+									$.getJSON("/disque/stats/processed.json", function(data) {
+										
+                    if( data.length == 0){
+                      graph.series.addData({processed: 0})
+                      graph.series.addData({failed: 0})
+                      return   
+                    }
+
+                    data.forEach(function(a){ 
+                      res = {}
+                      res[a.name] = a.values[0].count
+                      console.log(res)
+                      graph.series.addData(res);
+                    })
+
+									})
+								}
+
+								setInterval(function () {
+
+								    addData(chart);
+								    graph.render();
+
+								}, 600);
+						}
+            function drawGraph2(element, series) {
+                //$element.find('.y_axis').css('background-color: red;')
+
+								// instantiate our graph!
+								var graph = new Rickshaw.Graph( {
+									element: document.getElementById(element),
+									width: 960,
+									height: 200,
+									renderer: "line",
+									interpolation: 'linear',
+									series: series
+								} );
+
+								graph.render();
+
+								var hoverDetail = new Rickshaw.Graph.HoverDetail( {
+									graph: graph
+								} );
+
+								var legend = new Rickshaw.Graph.Legend( {
+									graph: graph,
+									element: document.getElementById('legend2')
+
+								} );
+
+								var shelving = new Rickshaw.Graph.Behavior.Series.Toggle( {
+									graph: graph,
+									legend: legend
+								} );
+
+								var axes = new Rickshaw.Graph.Axis.Time( {
+									graph: graph
+								} );
+
+								axes.render();
+
+						}
+				});
+    </script>
 
 
 <div class="col-sm-4">
