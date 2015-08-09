@@ -10,10 +10,15 @@ describe Discobolo::Supervisor do
 
 	end
 
-  it "register queues will instantiate actors" do 
-    supervisor = Discobolo::Supervisor.new
-    supervisor.async.register_queues
-    expect(supervisor.actors.size).to be == 1
-    expect(supervisor.actors.map(&:queues)).to include("default")
+  it "register queues will instantiate fetcher and worker pool" do 
+    supervisor = Discobolo::Supervisor.run!
+    expect(supervisor.actors.size).to be == 2
+    expect(supervisor.actors.map{|o| o.registered_name }).to include(:discobolo_fetcher)
+    expect(supervisor.actors.map{|o| o.registered_name }).to include(:discobolo_pool)
+  end
+
+  it "pool concurrency default" do 
+    supervisor = Discobolo::Supervisor.run!
+    expect(Celluloid::Actor[:discobolo_pool].actors.size).to be == 5
   end
 end

@@ -83,10 +83,6 @@ module Discobolo
       erb :'queues/show' 
     end
 
-    get "/workers" do 
-      erb :'workers/index'
-    end
-
     get "/jobs/:id" do 
       @job = client.show(params[:id])
       erb :'jobs/show'
@@ -100,6 +96,13 @@ module Discobolo
     get "/jobs/:id/dequeue" do 
       @job = client.enqueue(params[:id])
       redirect url_for("/jobs/#{params[:id]}")
+    end
+
+    get "/workers" do 
+      s = Discobolo::SocketClient.new("/tmp/discobolo_stats")
+      @workers = s.echo("stats")
+      s.finalize
+      erb :"workers/index"
     end
 
     get "/info" do 

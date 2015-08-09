@@ -30,6 +30,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency "disque"
   spec.add_dependency "sinatra"
   spec.add_dependency "celluloid"
+  spec.add_dependency "celluloid-io", "~> 0.16.5.pre0"
   spec.add_dependency "json"
   spec.add_dependency "influxdb"
 

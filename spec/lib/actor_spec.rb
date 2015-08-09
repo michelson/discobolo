@@ -14,17 +14,10 @@ describe Discobolo::Actor do
 
 	end
 
-  it "register queues will" do 
-    actor = Discobolo::Actor.new(queues: ["default"])
-    expect(actor.queues).to include("default")
-  end
-
   it "fetch will perform" do 
-    actor = Discobolo::Actor.new(queues: ["default"])
-    expect(actor.queues).to include("default")
-    expect_any_instance_of(MyWorker).to receive(:async).at_most(1).times
-    actor.async.fetch()
-    MyWorker.enqueue("hello")
+    actor = Discobolo::Actor.new
+    expect_any_instance_of(MyWorker).to receive(:perform_async).at_most(1).times
+    actor.handle_job("123", {"class"=>"MyWorker", :args=>{:a=> "6"} }.to_json)
   end
 
 end

@@ -1,10 +1,18 @@
 <div class="page-header">
-  <h1>Discobolo panel</h1>
+  <h1>Workers status</h1>
 </div>
 
-<p class="lead">Workers</p> 
+<% @workers %>
 
+<h2> Supervisor status: <%= @workers['supervisor_status'] %> </h2>
+
+<h3> Workers size: <%= @workers['workers_size'] %></h3>
 
 <ul>
-  
+   <% @workers['actors'].each do |actor| %>
+    <li>
+      Leaked: <%= actor['leaked'] %>
+      Tasks: <%= actor['tasks'] %>
+    </li>
+   <% end %>
 </ul>

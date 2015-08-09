@@ -56,4 +56,4 @@ end
 # rake console
 # $>  DefaultWorker.enqueue("Hello")
 # $>  ImportantWorker.enqueue([1,2,3,4])
-# $>  BogusWorker.enqueue({b:323 , c:"dslihjoikmkkkmkmmjj"})
+# $>  BogusWorker.enqueue({b:323 , c:"foo"})
