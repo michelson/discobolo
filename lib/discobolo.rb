@@ -4,6 +4,7 @@ require "disque"
 require 'celluloid/current'
 require "json"
 require 'core_ext/string/color'
+require 'thor'
 
 module Discobolo
   autoload :VERSION,      "discobolo/version.rb"
@@ -18,4 +19,5 @@ module Discobolo
   autoload :Actor,        "discobolo/actor"
   autoload :Worker,       "discobolo/worker"
   autoload :Application,  "discobolo/application"
+  autoload :CLI        ,  "discobolo/cli"
 end
